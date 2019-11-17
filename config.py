@@ -40,7 +40,7 @@ plotterConfig = {
     # 1 means vaues will take the whole time period dbIntervall
     # 0 means values will be directly displayed on readout
     # 10 means values that where read at time X will be fully written into the bar at time X+(10*dbIntervall)
-    "displayTime":      0.4,
+    "displayTime":      1.5,
     "displaySpeed":     1,          #display speed of updated values, 1 means equally spaced display times
     "roundPrecision":   1/100000,   #rounding precision to handle absolut float display issues
     "xAxisLeadOffset":  10,         #offset on the x axis in front of the highest bar to the end of the plot
@@ -51,6 +51,6 @@ plotterConfig = {
 teamConfig = {
     "numTeams":         4,          #number of playing teams, currently only 4 players are supported due to GUI limitations
     "teamColors": ['#035efc','#fc2803', '#03fc77', '#fce703'], #bar colors for the teams
-    "teamNames": ["Team BLAU","Team ROT", "Team GRÜN", "Team GELB"],  #team names used for plots
+    "teamNames": ["Team BLUE","Team RED", "Team GREEN", "Team YELLOW"],  #team names used for plots
 
 }
