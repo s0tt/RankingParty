@@ -3,7 +3,7 @@ from matplotlib import animation
 import numpy as np
 import random as rand
 from tinydb import TinyDB, Query
-from config import Drinks, plotterConfig, teamConfig
+from config import Drinks, plotterConfig, teamConfig, drinkPriceMapping
 import datetime
 import math
 from DB import DBHandler, Query
@@ -42,9 +42,16 @@ class Plotter():
             query = Query()
             queryExpression = (query.team == teamNr)
             response = self.DBHandler.read(queryExpression)
-            self.bufferArray[teamNr] = len(response)
+            self.bufferArray[teamNr] = self.calcTeamPoints(response)
         print("Updated DrinkCnt from DB at", datetime.datetime.now(), "Val: ", self.bufferArray)
 
+    def calcTeamPoints(self, teamDrinkHistory):
+        teamPoints = 0
+        for drink in teamDrinkHistory:
+            #convert DB drink type to enum type
+            drinkType = Drinks(drink["type"])
+            teamPoints += drinkPriceMapping[drinkType.name]
+        return teamPoints
 
     def animateHBarFunc(self, ticks, rects):
         if (ticks*plotterConfig["animIntervall"]) % plotterConfig["dbIntervall"] == 0:

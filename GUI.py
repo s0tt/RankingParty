@@ -14,14 +14,18 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         self.teamSelector = -1
 
         #setup lists
-        self.listListWidgets = [self.wodkaList, self.bacardiList, self.beerList, self.ginList, self.shotList]
+        self.listListWidgets = [self.wodkaList, self.bacardiList, self.beerList, self.ginList, 
+                                self.shotList, self.wineList, self.nonalcList, self.specialList]
         self.DrinksDict = dict((item.name, item.value) for item in Drinks)
 
         #connect button fcns
         self.pb_Blue.clicked.connect(lambda: self.handleTeamSel(self.pb_Blue))
         self.pb_Green.clicked.connect(lambda: self.handleTeamSel(self.pb_Green))
         self.pb_Red.clicked.connect(lambda: self.handleTeamSel(self.pb_Red))
-        self.pb_Yellow.clicked.connect(lambda: self.handleTeamSel(self.pb_Yellow))
+
+        ### TODO: add dynamic team selection based on team cnt
+        #self.pb_Yellow.clicked.connect(lambda: self.handleTeamSel(self.pb_Yellow))
+
         self.pbClearAmnt.clicked.connect(lambda: self.amntBox.setValue(1))
 
         #connect list views
@@ -32,6 +36,9 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         self.beerList.clicked.connect(lambda: self.handleDrinkSel(self.beerList))
         self.ginList.clicked.connect(lambda: self.handleDrinkSel(self.ginList))
         self.shotList.clicked.connect(lambda: self.handleDrinkSel(self.shotList))
+        self.wineList.clicked.connect(lambda: self.handleDrinkSel(self.wineList))
+        self.nonalcList.clicked.connect(lambda: self.handleDrinkSel(self.nonalcList))
+        self.specialList.clicked.connect(lambda: self.handleDrinkSel(self.specialList))
 
 
     def handleTeamSel(self, buttonPressed):
@@ -39,28 +46,28 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         if buttonPressed == self.pb_Blue:
             self.pb_Green.setChecked(checkedVal)
             self.pb_Red.setChecked(checkedVal)
-            self.pb_Yellow.setChecked(checkedVal)
+            #self.pb_Yellow.setChecked(checkedVal)
             self.pb_Blue.setChecked(not checkedVal)
-            self.teamSelector = 0
+            self.teamSelector = 2
         if buttonPressed == self.pb_Green:
             self.pb_Blue.setChecked(checkedVal)
             self.pb_Red.setChecked(checkedVal)
-            self.pb_Yellow.setChecked(checkedVal)
+            #self.pb_Yellow.setChecked(checkedVal)
             self.pb_Green.setChecked(not checkedVal)
-            self.teamSelector = 2
+            self.teamSelector = 1
         if buttonPressed == self.pb_Red:
             self.pb_Green.setChecked(checkedVal)
             self.pb_Blue.setChecked(checkedVal)
-            self.pb_Yellow.setChecked(checkedVal)
+            #self.pb_Yellow.setChecked(checkedVal)
             self.pb_Red.setChecked(not checkedVal)
-            self.teamSelector = 1
-        if buttonPressed == self.pb_Yellow:
-            self.pb_Green.setChecked(checkedVal)
-            self.pb_Blue.setChecked(checkedVal)
-            self.pb_Red.setChecked(checkedVal)
-            self.pb_Yellow.setChecked(not checkedVal)
-            self.teamSelector = 3
-        print("Selected Team: ", self.teamSelector)
+            self.teamSelector = 0
+#        if buttonPressed == self.pb_Yellow:
+#            self.pb_Green.setChecked(checkedVal)
+#            self.pb_Blue.setChecked(checkedVal)
+#            self.pb_Red.setChecked(checkedVal)
+#            self.pb_Yellow.setChecked(not checkedVal)
+#            self.teamSelector = 3
+#        print("Selected Team: ", self.teamSelector)
 
     def handleDrinkSel(self, listWidgetClicked):
 

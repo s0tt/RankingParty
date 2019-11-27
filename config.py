@@ -4,7 +4,7 @@ class Drinks(Enum):
     WODKA_PUR = 0
     WODKA_ORANGE = 1
     WODKA_BULL = 2
-    WODKA_BRAUSE = 3
+    WODKA_UBOOT = 3
 
     ####
     BACARDI_PUR = 10
@@ -24,10 +24,83 @@ class Drinks(Enum):
     SHOT_BERLINER_LUFT = 31
     SHOT_PFEFFI = 32
     SHOT_KLOPFER = 33
+    SHOT_WODKA_BRAUSE = 34
 
 
     ###
     GIN_TONIC = 40
+
+    ### Wine
+    WINE_SEKT = 50
+    WINE_HUGO = 51
+    WINE_SCHORLE = 52
+    WINE_FLASCHE = 53
+
+    ## Captain
+    CAPTAIN_COLA = 60
+
+    # Non-Alcoholic
+    NOALC_WASSER = 70
+    NOALC_COLA = 71
+    NOALC_FANTA = 72
+    NOALC_BULL = 73
+    NOALC_TONIC = 74
+
+    #Special
+    SPECIAL_SCHNAPS_TOWER = 80
+    SPECIAL_DUMMFICK = 81
+
+## map drink types with prices to count in points
+drinkPriceMapping = {
+    "WODKA_PUR": 200,
+    "WODKA_ORANGE" : 250,
+    "WODKA_BULL": 250,
+    "WODKA_UBOOT": 250,
+
+    ####
+    "BACARDI_PUR": 250,
+    "BACARDI_ORANGE": 250,
+    "BACARDI_COLA": 250,
+
+    ####
+    "BEER_HALBE": 200,
+    "BEER_WEIZEN": 200,
+    "BEER_PILS": 200,
+    "BEER_STIEFEL": 1200,
+    "BEER_MASS": 400,
+    "BEER_RADLER": 150,
+
+    ###
+    "SHOT_FICKEN": 150,
+    "SHOT_BERLINER_LUFT": 150,
+    "SHOT_PFEFFI": 150,
+    "SHOT_KLOPFER": 150,
+    "SHOT_WODKA_BRAUSE": 150,
+
+
+    ###
+    "GIN_TONIC": 250,
+
+    ### Wine
+    "WINE_SEKT": 200,
+    "WINE_HUGO": 200,
+    "WINE_SCHORLE": 200,
+    "WINE_FLASCHE": 900,
+
+    ## Captain
+    "CAPTAIN_COLA": 250,
+
+    # Non-Alcoholic
+    "NOALC_WATER": 150,
+    "NOALC_COLA": 150,
+    "NOALC_FANTA": 150,
+    "NOALC_BULL": 150,
+    "NOALC_TONIC": 150,
+
+    #Special
+    "SPECIAL_SCHNAPS_TOWER": 2800,
+    "SPECIAL_DUMMFICK": 250,
+}
 
 
 ######## Plotter config values ########
@@ -49,8 +122,8 @@ plotterConfig = {
     }
 
 teamConfig = {
-    "numTeams":         4,          #number of playing teams, currently only 4 players are supported due to GUI limitations
-    "teamColors": ['#035efc','#fc2803', '#03fc77', '#fce703'], #bar colors for the teams
-    "teamNames": ["Team BLUE","Team RED", "Team GREEN", "Team YELLOW"],  #team names used for plots
+    "numTeams":         3,          #number of playing teams, currently only 4 players are supported due to GUI limitations
+    "teamColors": ['#fc2803', '#03fc77', '#035efc'], #bar colors for the teams
+    "teamNames": ["Team ROT", "Team GRÜN", "Team BLAU"],  #team names used for plots
 
 }
