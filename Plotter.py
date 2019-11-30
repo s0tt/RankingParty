@@ -50,7 +50,7 @@ class Plotter():
         for drink in teamDrinkHistory:
             #convert DB drink type to enum type
             drinkType = Drinks(drink["type"])
-            teamPoints += drinkPriceMapping[drinkType.name]
+            teamPoints += drinkPriceMapping[drinkType.name]/plotterConfig["pointsScaleFactor"]
         return teamPoints
 
     def animateHBarFunc(self, ticks, rects):

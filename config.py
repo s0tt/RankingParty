@@ -116,6 +116,7 @@ plotterConfig = {
     "displayTime":      1.5,
     "displaySpeed":     1,          #display speed of updated values, 1 means equally spaced display times
     "roundPrecision":   1/100000,   #rounding precision to handle absolut float display issues
+    "pointsScaleFactor": 100,       #defines the factor the drink points defined above are divided by
     "xAxisLeadOffset":  10,         #offset on the x axis in front of the highest bar to the end of the plot
     "figSize":          (15,8),     #size of the figure the graphs are plotted into
     "barHeight":        0.5,        #height of the bars
