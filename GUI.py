@@ -15,7 +15,8 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
 
         #setup lists
         self.listListWidgets = [self.wodkaList, self.bacardiList, self.beerList, self.ginList, 
-                                self.shotList, self.wineList, self.nonalcList, self.specialList]
+                                self.shotList, self.wineList, self.noalcList, self.specialList, 
+                                self.captainList]
         self.DrinksDict = dict((item.name, item.value) for item in Drinks)
 
         #connect button fcns
@@ -37,8 +38,9 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         self.ginList.clicked.connect(lambda: self.handleDrinkSel(self.ginList))
         self.shotList.clicked.connect(lambda: self.handleDrinkSel(self.shotList))
         self.wineList.clicked.connect(lambda: self.handleDrinkSel(self.wineList))
-        self.nonalcList.clicked.connect(lambda: self.handleDrinkSel(self.nonalcList))
+        self.noalcList.clicked.connect(lambda: self.handleDrinkSel(self.noalcList))
         self.specialList.clicked.connect(lambda: self.handleDrinkSel(self.specialList))
+        self.captainList.clicked.connect(lambda: self.handleDrinkSel(self.captainList))
 
 
     def handleTeamSel(self, buttonPressed):

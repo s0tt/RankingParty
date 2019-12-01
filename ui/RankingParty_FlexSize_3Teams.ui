@@ -300,6 +300,16 @@
                   <string>Klopfer</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Wodka Brause</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Schüttler</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -344,11 +354,6 @@
                 <item>
                  <property name="text">
                   <string>Orange</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Brause</string>
                  </property>
                 </item>
                 <item>
@@ -459,11 +464,6 @@
                 <item>
                  <property name="text">
                   <string>Radler</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Stiefel</string>
                  </property>
                 </item>
                 <item>
@@ -619,7 +619,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QListWidget" name="nonalcList">
+               <widget class="QListWidget" name="noalcList">
                 <property name="font">
                  <font>
                   <family>Bebas Neue Regular</family>
@@ -693,6 +693,21 @@
                 <property name="editTriggers">
                  <set>QAbstractItemView::NoEditTriggers</set>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>Schnaps Tower</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Bier Tower</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Dummfick</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>

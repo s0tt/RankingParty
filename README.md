@@ -7,3 +7,6 @@ Show updated data live in a horizontal bar graph:
 
 Intuitive GUI based on PyQT5 to add new drinks into the database live:
 ![Live GUI demo](demo/demo02.gif)
+
+To convert the UI files in the ui/ folder to actual Python code, use the following command:
+pyuic5 ui/<filename>.ui -o RankingPartyGUI.py

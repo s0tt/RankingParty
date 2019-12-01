@@ -1,5 +1,7 @@
+import matplotlib
+matplotlib.use('Qt5Agg')   # generate postscript output by default
 from matplotlib import pyplot as plt
-from matplotlib import animation
+from matplotlib import animation, ticker
 import numpy as np
 import random as rand
 from tinydb import TinyDB, Query
@@ -20,7 +22,9 @@ class Plotter():
         self.bufferArray = [0] * teamConfig["numTeams"]
         self.bufferArrayOld = [0] * teamConfig["numTeams"]
         self.bufferListList = [0] * teamConfig["numTeams"]
-        self.teamTextList = [0] * teamConfig["numTeams"]
+        self.teamPointsTextList = [0] * teamConfig["numTeams"]
+        self.teamNameTextList = [0] * teamConfig["numTeams"]
+        self.dbUpdateCnt = 0
         for i in range(0, teamConfig["numTeams"]):
             self.bufferListList[i] = [0]
 
@@ -32,10 +36,30 @@ class Plotter():
         rectsHBar = axis.barh(teamConfig["teamNames"], self.drinkCnt,  height=np.full(teamConfig["numTeams"], 
                                 plotterConfig["barHeight"]), color= teamConfig["teamColors"])
 
+        #team moving point counter text
         for i in range(0, teamConfig["numTeams"]):
-            self.teamTextList[i] = axis.text(i, 0, 0, ha='left', size=14)
+            self.teamPointsTextList[i] = axis.text(i, 0, 0, ha='left', size=16)
 
+        #team moving team name text
+        for i in range(0, teamConfig["numTeams"]):
+            self.teamNameTextList[i] = axis.text(i, 0, teamConfig["teamNames"][i], ha='right', size=18)
+
+        ### advanced styling
+        axis.text(0, 1.06, 'Teampunkte', transform=axis.transAxes, size=12, color='#777777')
+        axis.xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+        axis.xaxis.set_ticks_position('top')
+        axis.tick_params(axis='x', colors='#777777', labelsize=12)
+        axis.set_yticks([])
+        axis.margins(0, 0.01)
+        axis.grid(which='major', axis='x', linestyle='-')
+        axis.set_axisbelow(True)
+        axis.text(0, 1.12, 'Ranking Party @JC Salmendingen',
+            transform=axis.transAxes, size=24, weight=600, ha='left')
+        axis.text(1, 0, 'by @Stefan Ott', transform=axis.transAxes, ha='right',
+            color='#777777', bbox=dict(facecolor='white', alpha=0.8, edgecolor='white'))
         return rectsHBar
+
+    #def plotTimer(self, fig):
 
     def readDB(self):
         for teamNr in range(0, teamConfig["numTeams"]):
@@ -54,8 +78,10 @@ class Plotter():
         return teamPoints
 
     def animateHBarFunc(self, ticks, rects):
-        if (ticks*plotterConfig["animIntervall"]) % plotterConfig["dbIntervall"] == 0:
+        #print(((ticks*plotterConfig["animIntervall"])-(self.dbUpdateCnt*plotterConfig["dbIntervall"])) )
+        if ((ticks*plotterConfig["animIntervall"])-(self.dbUpdateCnt*plotterConfig["dbIntervall"])) >= plotterConfig["dbIntervall"]:
             self.readDB()
+            self.dbUpdateCnt += 1
 
         #update bar drink Cnt
         self.timeBufferManager()
@@ -66,12 +92,13 @@ class Plotter():
         #line.set_data(x, data[i])
         #ax.clear()
         for i in range(0, teamConfig["numTeams"]):
-            self.teamTextList[i].set_position((self.drinkCnt[i], i))
-            self.teamTextList[i].set_text(str(math.trunc(self.drinkCnt[i])))
+            self.teamPointsTextList[i].set_position((self.drinkCnt[i]+1, i))
+            self.teamPointsTextList[i].set_text(str(math.trunc(self.drinkCnt[i])))
+            self.teamNameTextList[i].set_position((self.drinkCnt[i]-1, i))
         #val1 = ax.text(drinkCnt[1],  1,     drinkCnt[1],           ha='left')   
         plt.xlim(0, max(self.drinkCnt)+plotterConfig["xAxisLeadOffset"])
         #ax.set_xlim(auto=True)
-        #print("Animate Fnc, I: ", ticks)
+        #print("Animate Fnc, I: ", ticks, "at ", datetime.datetime.now())
         #print("DrinkCt",drinkCnt) 
         
         return rects
