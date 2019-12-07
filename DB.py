@@ -8,6 +8,10 @@ class DBHandler:
         self.dbPath = plotterConfig["dbPath"]
         self.dbgMode = dbgMode
         self.query = Query()
+        ###init shared data for GUI
+        self.connect()
+        self.db.insert({"teamBoosts": 0})
+        self.close()
 
     def connect(self):
         self.db = TinyDB(self.dbPath)
@@ -31,6 +35,12 @@ class DBHandler:
     def read(self, query):
         self.connect()
         response = self.db.search(query)
+        self.close()
+        return response
+    
+    def readById(self, id):
+        self.connect()
+        response = self.db.get(doc_id=id)
         self.close()
         return response
 

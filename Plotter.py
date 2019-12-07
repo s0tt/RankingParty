@@ -34,7 +34,7 @@ class Plotter():
 
     def plotHBar(self, axis):
         rectsHBar = axis.barh(teamConfig["teamNames"], self.drinkCnt,  height=np.full(teamConfig["numTeams"], 
-                                plotterConfig["barHeight"]), color= teamConfig["teamColors"])
+                                plotterConfig["barHeight"]), color= teamConfig["teamColors"], )
 
         #team moving point counter text
         for i in range(0, teamConfig["numTeams"]):
@@ -45,21 +45,23 @@ class Plotter():
             self.teamNameTextList[i] = axis.text(i, 0, teamConfig["teamNames"][i], ha='right', size=18)
 
         ### advanced styling
-        axis.text(0, 1.06, 'Teampunkte', transform=axis.transAxes, size=12, color='#777777')
+        #custom borders
+        plt.subplots_adjust(top=0.75,bottom=0.055,left=0.04,right=0.95,)
+
+        axis.text(0, 1.06, 'Teampunkte', transform=axis.transAxes, size=16, color='#777777')
         axis.xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
         axis.xaxis.set_ticks_position('top')
-        axis.tick_params(axis='x', colors='#777777', labelsize=12)
+        axis.tick_params(axis='x', colors='#777777', labelsize=16)
         axis.set_yticks([])
         axis.margins(0, 0.01)
         axis.grid(which='major', axis='x', linestyle='-')
         axis.set_axisbelow(True)
         axis.text(0, 1.12, 'Ranking Party @JC Salmendingen',
             transform=axis.transAxes, size=24, weight=600, ha='left')
-        axis.text(1, 0, 'by @Stefan Ott', transform=axis.transAxes, ha='right',
+
+        axis.text(2, 0, 'by @Stefan Ott', transform=axis.transAxes, ha='right',
             color='#777777', bbox=dict(facecolor='white', alpha=0.8, edgecolor='white'))
         return rectsHBar
-
-    #def plotTimer(self, fig):
 
     def readDB(self):
         for teamNr in range(0, teamConfig["numTeams"]):
@@ -81,6 +83,8 @@ class Plotter():
         #print(((ticks*plotterConfig["animIntervall"])-(self.dbUpdateCnt*plotterConfig["dbIntervall"])) )
         if ((ticks*plotterConfig["animIntervall"])-(self.dbUpdateCnt*plotterConfig["dbIntervall"])) >= plotterConfig["dbIntervall"]:
             self.readDB()
+            #also execute check for specials und dbRead
+            self.executeSpecials()
             self.dbUpdateCnt += 1
 
         #update bar drink Cnt
@@ -101,7 +105,14 @@ class Plotter():
         #print("Animate Fnc, I: ", ticks, "at ", datetime.datetime.now())
         #print("DrinkCt",drinkCnt) 
         
+
+
         return rects
+
+    def executeSpecials(self):
+        response = self.DBHandler.readById(1)
+        if response["teamBoosts"] != 0:
+            print("[Special] Special with code", response["teamBoosts"], " activated!")
 
 
     def timeBufferManager(self):   
