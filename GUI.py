@@ -1,8 +1,10 @@
 from PyQt5 import QtGui, QtWidgets
 import sys
 import RankingPartyGUI
-from config import Drinks
-from DB import DBHandler
+from config import Drinks, teamConfig
+from DB import DBHandler, Query
+from time import time
+import math
 
 class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -12,6 +14,7 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         #setup class
         self.DBHandler = DBHandler(dbgMode=True)
         self.teamSelector = -1
+        self.specialIsActive = False
 
         #setup lists
         self.listListWidgets = [self.wodkaList, self.bacardiList, self.beerList, self.ginList, 
@@ -23,6 +26,8 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         self.pb_Blue.clicked.connect(lambda: self.handleTeamSel(self.pb_Blue))
         self.pb_Green.clicked.connect(lambda: self.handleTeamSel(self.pb_Green))
         self.pb_Red.clicked.connect(lambda: self.handleTeamSel(self.pb_Red))
+        self.pb_remove.clicked.connect(lambda: self.removeLogs())
+        self.pb_controlMult.clicked.connect(lambda: self.handleMultiplier())
 
         ### TODO: add dynamic team selection based on team cnt
         #self.pb_Yellow.clicked.connect(lambda: self.handleTeamSel(self.pb_Yellow))
@@ -73,7 +78,7 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
 
     def handleDrinkSel(self, listWidgetClicked):
 
-        print(listWidgetClicked.objectName(), " clicked")
+        #print(listWidgetClicked.objectName(), " clicked")
 
         #### manage GUi displaying
         for listWidget in self.listListWidgets:
@@ -99,9 +104,57 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
 
         self.pushDB()
 
+    def removeLogs(self):
+        #function to remove selected logs from db& view
+        for selectedItem in self.logList.selectedItems():
+            idx = selectedItem.text().split("=")[1]
+            self.DBHandler.removeByIdx(idx)
+            #self.logList.takeItem(selectedItem.row())
+
     def pushDB(self):
         #### push to database
-        self.DBHandler.write(self.teamSelector, self.drinkID, drinkNR=self.amntBox.value())
+        drinkAmount = self.amntBox.value()
+        idx = self.DBHandler.write(self.teamSelector, self.drinkID, drinkNR=drinkAmount)
+
+        ### display pushed data in log box
+        teamNames = teamConfig["teamNames"]
+        printStr = str(teamNames[self.teamSelector].replace("\n"," "))+" | Pkt: "+str(self.drinkID)+" | IDX=" + str(idx)
+        self.logList.addItem(printStr)
+        if self.logList.count() > 10:
+            self.logList.takeItem(10)
+
+    def handleMultiplier(self):
+        if self.specialIsActive:
+            ### special active
+            self.DBHandler.updateById( {
+                        'isActive': 0,
+                        'boost_red': 1.0, 
+                        'boost_green': 1.0,
+                        'boost_blue': 1.0
+                        }, [1])
+            self.pb_controlMult.setText("Activate")
+            self.specialIsActive = False
+
+        else:
+            ### special not yet active
+            self.pb_controlMult.setChecked
+            multiplierVal = self.sb_multiplier.value()
+            multiplierList = [0, 0, 0]
+            for idx, cbItem in enumerate([self.cb_red, self.cb_green, self.cb_blue]):
+                if cbItem.isChecked() is True:
+                    multiplierList[idx] = multiplierVal
+
+            
+            self.DBHandler.updateById( {
+                                    'isActive': 1,
+                                    'boost_red':multiplierList[0], 
+                                    'boost_green':multiplierList[1],
+                                    'boost_blue': multiplierList[2]
+                                    }, [1])
+            self.pb_controlMult.setText("Deactivate")                        
+            self.specialIsActive = True
+                
+                
         
         
 def main():

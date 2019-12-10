@@ -2,6 +2,8 @@ from config import plotterConfig, Drinks
 from tinydb import TinyDB
 from tinydb import Query
 import datetime
+import math
+import uuid
 
 class DBHandler:
     def __init__(self, dbgMode = False):
@@ -9,9 +11,10 @@ class DBHandler:
         self.dbgMode = dbgMode
         self.query = Query()
         ###init shared data for GUI
-        self.connect()
-        self.db.insert({"teamBoosts": 0})
-        self.close()
+        if self.readById(1) is None:
+            self.connect()
+            self.db.insert({"isActive": 0, "boost_red": 0, "boost_green": 0, "boost_blue": 0})
+            self.close()
 
     def connect(self):
         self.db = TinyDB(self.dbPath)
@@ -29,8 +32,20 @@ class DBHandler:
                 self.db.insert({"team": teamID, "type": drinkID})
             if self.dbgMode:
                 print("Db Insert | Team:", teamID, " Drink:", drinkID, " at ", timestamp)
-
+        idx = len(self.db.all())
         self.close()
+        return idx
+
+    def removeByIdx(self, idx):
+        self.connect()
+        self.db.remove(doc_ids=[idx])
+        self.close()
+
+    def removeByQuery(self, query):
+        self.connect()
+        self.db.remove(query)
+        self.close() 
+        
 
     def read(self, query):
         self.connect()
@@ -47,5 +62,11 @@ class DBHandler:
     def readAll(self):
         self.connect()
         response = self.db.all()
+        self.close()
+        return response
+
+    def updateById(self,fields,ids):
+        self.connect()
+        response = self.db.update(fields, doc_ids=ids)
         self.close()
         return response

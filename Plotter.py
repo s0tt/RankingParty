@@ -17,6 +17,10 @@ class Plotter():
         TinyDB.DEFAULT_TABLE_KWARGS = {'cache_size': 0}
         self.DBHandler = DBHandler()
 
+        ### special vars
+        self.isSpecialActive = False
+        self.teamMultipliers = [0] * teamConfig["numTeams"]
+
         ### init lists
         self.drinkCnt = [0] * teamConfig["numTeams"]
         self.bufferArray = [0] * teamConfig["numTeams"]
@@ -111,8 +115,22 @@ class Plotter():
 
     def executeSpecials(self):
         response = self.DBHandler.readById(1)
-        if response["teamBoosts"] != 0:
-            print("[Special] Special with code", response["teamBoosts"], " activated!")
+        if response["isActive"] != 0:
+            #special got triggered
+            if self.isSpecialActive is False:
+                print("[Special] Special multiplier got activated!")
+                self.isSpecialActive = True
+                self.teamMultipliers[0] = response["boost_red"]
+                self.teamMultipliers[1] = response["boost_green"]
+                self.teamMultipliers[2] = response["boost_blue"]
+                print("[Special] Team boosts applied")
+            #special still active & running
+        else:
+            self.isSpecialActive = False
+            print("[Special] Special multiplier deactivated!")
+            self.teamMultipliers = [0] * len(self.teamMultipliers)
+            print("[Special] Team boosts deactivated")
+
 
 
     def timeBufferManager(self):   

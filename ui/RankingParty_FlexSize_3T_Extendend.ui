@@ -779,7 +779,7 @@
       <item>
        <layout class="QHBoxLayout" name="actionLog" stretch="8,2">
         <item>
-         <widget class="QListView" name="logList"/>
+         <widget class="QListWidget" name="logList"/>
         </item>
         <item>
          <widget class="QPushButton" name="pb_remove">
@@ -839,6 +839,9 @@
          <widget class="QPushButton" name="pb_controlMult">
           <property name="text">
            <string>Activate Multiplier</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
