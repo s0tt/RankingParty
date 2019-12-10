@@ -15,6 +15,7 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
         self.DBHandler = DBHandler(dbgMode=True)
         self.teamSelector = -1
         self.specialIsActive = False
+        self.multiplierList = [1, 1, 1]
 
         #setup lists
         self.listListWidgets = [self.wodkaList, self.bacardiList, self.beerList, self.ginList, 
@@ -114,7 +115,7 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
     def pushDB(self):
         #### push to database
         drinkAmount = self.amntBox.value()
-        idx = self.DBHandler.write(self.teamSelector, self.drinkID, drinkNR=drinkAmount)
+        idx = self.DBHandler.writeDrinks(self.teamSelector, self.drinkID, self.multiplierList, drinkNR=drinkAmount)
 
         ### display pushed data in log box
         teamNames = teamConfig["teamNames"]
@@ -133,23 +134,23 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
                         'boost_blue': 1.0
                         }, [1])
             self.pb_controlMult.setText("Activate")
+            self.multiplierList = [1, 1, 1]
             self.specialIsActive = False
 
         else:
             ### special not yet active
             self.pb_controlMult.setChecked
             multiplierVal = self.sb_multiplier.value()
-            multiplierList = [0, 0, 0]
             for idx, cbItem in enumerate([self.cb_red, self.cb_green, self.cb_blue]):
                 if cbItem.isChecked() is True:
-                    multiplierList[idx] = multiplierVal
+                    self.multiplierList[idx] = multiplierVal
 
             
             self.DBHandler.updateById( {
                                     'isActive': 1,
-                                    'boost_red':multiplierList[0], 
-                                    'boost_green':multiplierList[1],
-                                    'boost_blue': multiplierList[2]
+                                    'boost_red':self.multiplierList[0], 
+                                    'boost_green':self.multiplierList[1],
+                                    'boost_blue': self.multiplierList[2]
                                     }, [1])
             self.pb_controlMult.setText("Deactivate")                        
             self.specialIsActive = True

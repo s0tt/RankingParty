@@ -79,8 +79,9 @@ class Plotter():
         teamPoints = 0
         for drink in teamDrinkHistory:
             #convert DB drink type to enum type
-            drinkType = Drinks(drink["type"])
-            teamPoints += drinkPriceMapping[drinkType.name]/plotterConfig["pointsScaleFactor"]
+            #drinkType = Drinks(drink["type"])
+            #teamPoints += drinkPriceMapping[drinkType.name]/plotterConfig["pointsScaleFactor"]
+            teamPoints += drink["pts"]/plotterConfig["pointsScaleFactor"]
         return teamPoints
 
     def animateHBarFunc(self, ticks, rects):

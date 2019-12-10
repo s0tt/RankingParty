@@ -1,4 +1,4 @@
-from config import plotterConfig, Drinks
+from config import plotterConfig, Drinks, drinkPriceMapping
 from tinydb import TinyDB
 from tinydb import Query
 import datetime
@@ -22,16 +22,23 @@ class DBHandler:
     def close(self):
         self.db.close()
 
-    def write(self, teamID, drinkID, drinkNR=1, appendTimeStamp=True):
+    def write(self, fields):
         self.connect()
+        self.db.insert(fields)
+        self.db.close()
+
+    def writeDrinks(self, teamID, drinkID, multiplierList, drinkNR=1, appendTimeStamp=True):
         timestamp = datetime.datetime.now().timestamp()
+        drinkType = Drinks(drinkID)
+        finalDrinkPts = drinkPriceMapping[drinkType.name] * multiplierList[teamID]
         for i in range(0,drinkNR):
             if appendTimeStamp:
-                self.db.insert({"team": teamID, "type": drinkID, "time": timestamp})
+                self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts, "time": timestamp})
             else:
-                self.db.insert({"team": teamID, "type": drinkID})
+                self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts})
             if self.dbgMode:
-                print("Db Insert | Team:", teamID, " Drink:", drinkID, " at ", timestamp)
+                print("Db Insert | Team:", teamID, " Drink:", drinkType.name, " at ", timestamp)
+        self.connect()
         idx = len(self.db.all())
         self.close()
         return idx
