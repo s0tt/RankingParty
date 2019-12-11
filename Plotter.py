@@ -19,6 +19,8 @@ class Plotter():
 
         ### special vars
         self.isSpecialActive = False
+        self.specialText = None
+        self.backgroundCnt = 0
         self.teamMultipliers = [0] * teamConfig["numTeams"]
 
         ### init lists
@@ -33,8 +35,8 @@ class Plotter():
             self.bufferListList[i] = [0]
 
     def plotFigure(self):
-        fig, ax = plt.subplots(figsize=plotterConfig["figSize"])
-        return fig, ax
+        self.fig, self.ax = plt.subplots(figsize=plotterConfig["figSize"])
+        return self.fig, self.ax
 
     def plotHBar(self, axis):
         rectsHBar = axis.barh(teamConfig["teamNames"], self.drinkCnt,  height=np.full(teamConfig["numTeams"], 
@@ -63,6 +65,7 @@ class Plotter():
         axis.text(0, 1.12, 'Ranking Party @JC Salmendingen',
             transform=axis.transAxes, size=24, weight=600, ha='left')
 
+        
         axis.text(2, 0, 'by @Stefan Ott', transform=axis.transAxes, ha='right',
             color='#777777', bbox=dict(facecolor='white', alpha=0.8, edgecolor='white'))
         return rectsHBar
@@ -109,7 +112,19 @@ class Plotter():
         #ax.set_xlim(auto=True)
         #print("Animate Fnc, I: ", ticks, "at ", datetime.datetime.now())
         #print("DrinkCt",drinkCnt) 
-        
+
+        if ticks%25 == 0:
+            if self.isSpecialActive:
+                if self.backgroundCnt == 0:
+                    #self.ax.set_facecolor('#ffccb3')
+                    #multString = "x" + str(self.teamMultipliers[1])
+                    self.specialText.set_position((self.ax.get_xlim()[1]*0.35, self.ax.get_ylim()[1]*0.25))
+                    self.specialText.set_visible(True)
+                    self.backgroundCnt = 1
+                elif self.backgroundCnt == 1:
+                    #self.ax.set_facecolor('#FFFFFF')
+                    self.specialText.set_visible(False)
+                    self.backgroundCnt = 0
 
 
         return rects
@@ -125,12 +140,22 @@ class Plotter():
                 self.teamMultipliers[1] = response["boost_green"]
                 self.teamMultipliers[2] = response["boost_blue"]
                 print("[Special] Team boosts applied")
+
+                #special styling
+                multString = "x" + str(self.teamMultipliers[1])
+                if self.specialText is None:
+                    self.specialText = self.ax.text(self.ax.get_xlim()[1]*0.35, self.ax.get_ylim()[1]*0.25, multString, size=200, alpha=0.4)
+                else:
+                    self.specialText.set_text(multString)
+                    self.specialText.set_position((self.ax.get_xlim()[1]*0.35, self.ax.get_ylim()[1]*0.25))
+
             #special still active & running
         else:
-            self.isSpecialActive = False
-            print("[Special] Special multiplier deactivated!")
-            self.teamMultipliers = [0] * len(self.teamMultipliers)
-            print("[Special] Team boosts deactivated")
+            if self.isSpecialActive is True:
+                self.isSpecialActive = False
+                print("[Special] Special multiplier deactivated!")
+                self.teamMultipliers = [0] * len(self.teamMultipliers)
+                print("[Special] Team boosts deactivated")
 
 
 
