@@ -1,10 +1,11 @@
 from PyQt5 import QtGui, QtWidgets
 import sys
 import RankingPartyGUI
-from config import Drinks, teamConfig
+from config import Drinks, teamConfig, drinkPriceMapping
 from DB import DBHandler, Query
 from time import time
 import math
+import ast
 
 class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -108,21 +109,26 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
     def removeLogs(self):
         #function to remove selected logs from db& view
         for selectedItem in self.logList.selectedItems():
-            idx = selectedItem.text().split("=")[1]
-            self.DBHandler.removeByIdx(idx)
-            #self.logList.takeItem(selectedItem.row())
+            idxListStr = selectedItem.text().split("=")[1]
+            #self.DBHandler.removeByIdx(idx)
+            #idxList = idxListStr.strip('][').split(', ')
+            idxList = ast.literal_eval(idxListStr)
+
+            self.DBHandler.updateById({'pts': -1}, idxList)
+            self.logList.takeItem(self.logList.row(selectedItem))
 
     def pushDB(self):
         #### push to database
         drinkAmount = self.amntBox.value()
-        idx = self.DBHandler.writeDrinks(self.teamSelector, self.drinkID, self.multiplierList, drinkNR=drinkAmount)
+        idxList = self.DBHandler.writeDrinks(self.teamSelector, self.drinkID, self.multiplierList, drinkNR=drinkAmount)
 
         ### display pushed data in log box
         teamNames = teamConfig["teamNames"]
-        printStr = str(teamNames[self.teamSelector].replace("\n"," "))+" | Pkt: "+str(self.drinkID)+" | IDX=" + str(idx)
+        drinkName = Drinks(self.drinkID).name
+        printStr = str(teamNames[self.teamSelector].replace("\n"," "))+" | "+ str(drinkAmount) +"x "+ str(drinkName) +" "+ str(drinkPriceMapping[drinkName]* self.multiplierList[self.teamSelector])+"pts | IDX=" + str(idxList)
         self.logList.addItem(printStr)
-        if self.logList.count() > 10:
-            self.logList.takeItem(10)
+        if self.logList.count() > 5:
+            self.logList.takeItem(0)
 
     def handleMultiplier(self):
         if self.specialIsActive:

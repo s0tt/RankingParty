@@ -22,26 +22,28 @@ class DBHandler:
     def close(self):
         self.db.close()
 
-    def write(self, fields):
+    def write(self, fields, returnIdx=False):
         self.connect()
         self.db.insert(fields)
+        if returnIdx:
+            return len(self.db.all())
         self.db.close()
 
     def writeDrinks(self, teamID, drinkID, multiplierList, drinkNR=1, appendTimeStamp=True):
         timestamp = datetime.datetime.now().timestamp()
         drinkType = Drinks(drinkID)
         finalDrinkPts = drinkPriceMapping[drinkType.name] * multiplierList[teamID]
+        idxList = []
         for i in range(0,drinkNR):
             if appendTimeStamp:
-                self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts, "time": timestamp})
+                idx = self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts, "time": timestamp}, returnIdx=True)
+                idxList.append(idx)
             else:
-                self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts})
+                idx = self.write({"team": teamID, "type": drinkID, "pts": finalDrinkPts}, returnIdx=True)
+                idxList.append(idx)
             if self.dbgMode:
                 print("Db Insert | Team:", teamID, " Drink:", drinkType.name, " at ", timestamp)
-        self.connect()
-        idx = len(self.db.all())
-        self.close()
-        return idx
+        return idxList
 
     def removeByIdx(self, idx):
         self.connect()
