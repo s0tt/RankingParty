@@ -1,5 +1,5 @@
 # RankingParty
-A simple Python UI and visualization for partys. Split the guests into teams and then drink against each other
+A simple Python UI and visualization for partys. Split the guests into teams and enjoy some drinks together.
 Using Pythons matplotlib, PyQT5 and TinyDB as simple JSON database.
 
 Show updated data live in a horizontal bar graph:
