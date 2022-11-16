@@ -147,6 +147,7 @@ class RankingPartyApp(QtWidgets.QMainWindow, RankingPartyGUI.Ui_MainWindow):
             ### special not yet active
             self.pb_controlMult.setChecked
             multiplierVal = self.sb_multiplier.value()
+            print("Multiplier activated", multiplierVal)
             for idx, cbItem in enumerate([self.cb_red, self.cb_green, self.cb_blue]):
                 if cbItem.isChecked() is True:
                     self.multiplierList[idx] = multiplierVal

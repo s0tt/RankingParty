@@ -122,6 +122,7 @@ plotterConfig = {
     "xAxisLeadOffset":  20,         #offset on the x axis in front of the highest bar to the end of the plot
     "figSize":          (15,8),     #size of the figure the graphs are plotted into
     "barHeight":        0.5,        #height of the bars
+    "blit": False,
     }
 
 teamConfig = {

@@ -17,7 +17,7 @@ def main():
 
     bars = RankingPlotter.plotHBar(axis)
     RankingPlotter.readDB()
-    anim = animation.FuncAnimation(fig, RankingPlotter.animateHBarFunc, fargs=(bars,), interval=plotterConfig["animIntervall"], repeat=False, blit=False) ##interval in ms
+    anim = animation.FuncAnimation(fig, RankingPlotter.animateHBarFunc, fargs=(bars,), interval=plotterConfig["animIntervall"], repeat=False, blit=plotterConfig["blit"]) ##interval in ms
     pyplot.show()
 
 
